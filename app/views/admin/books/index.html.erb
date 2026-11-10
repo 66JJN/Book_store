@@ -1,0 +1,18 @@
+<% content_for :title, "Manage books" %>
+
+<h1>Manage Books</h1>
+<p><%= link_to "Add book", new_admin_book_path %></p>
+
+<table>
+  <thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
+  <tbody>
+    <% @books.each do |book| %>
+      <tr>
+        <td><%= link_to book.title, book_path(book) %></td>
+        <td><%= book.author %></td><td><%= book.category.name %></td>
+        <td><%= number_to_currency(book.price) %></td><td><%= book.stock %></td>
+        <td><%= link_to "Edit", edit_admin_book_path(book) %> <%= button_to "Delete", admin_book_path(book), method: :delete, data: { turbo_confirm: "Delete #{book.title}?" } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,5 @@
+<% content_for :title, "Admin" %>
+
+<h1>Admin dashboard</h1>
+<p><%= pluralize(@book_count, "book") %> in <%= pluralize(@category_count, "category") %>.</p>
+<%= link_to "Manage books", admin_books_path %>

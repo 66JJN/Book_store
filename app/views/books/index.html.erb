@@ -1,0 +1,41 @@
+<% content_for :title, "Books" %>
+
+<h1 class="text-3xl font-bold text-center py-6">
+  All Books
+</h1>
+
+<%= form_with url: books_path, method: :get, class: "flex gap-2 justify-center mb-6" do |form| %>
+  <%= form.label :q, "Search books" %>
+  <%= form.search_field :q, value: @query, placeholder: "Title, author, or ISBN" %>
+  <%= form.hidden_field :category_id, value: @selected_category_id %>
+  <%= form.submit "Search" %>
+  <%= link_to "Clear", books_path if @query.present? || @selected_category_id.present? %>
+<% end %>
+
+<section aria-label="Book categories">
+  <h2>Categories</h2>
+  <%= link_to "All", books_path(q: @query) %>
+  <% @categories.each do |category| %>
+    <%= link_to category.name, books_path(category_id: category.id, q: @query) %>
+  <% end %>
+</section>
+
+<p><%= pluralize(@books.count, "book") %> found.</p>
+
+<% if @books.any? %>
+  <ul>
+    <% @books.each do |book| %>
+      <li>
+        <% if book.cover_image_url.present? %>
+          <%= image_tag book.cover_image_url, alt: "Cover of #{book.title}", width: 96 %>
+        <% end %>
+        <h2><%= link_to book.title, book_path(book) %></h2>
+        <p><%= book.author %></p>
+        <p><%= book.category.name %></p>
+        <p><%= number_to_currency(book.price) %></p>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No books match your search.</p>
+<% end %>

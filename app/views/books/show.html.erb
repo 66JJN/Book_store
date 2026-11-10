@@ -1,0 +1,17 @@
+<% content_for :title, @book.title %>
+
+<article>
+  <% if @book.cover_image_url.present? %>
+    <%= image_tag @book.cover_image_url, alt: "Cover of #{@book.title}", width: 240 %>
+  <% end %>
+  <h1><%= @book.title %></h1>
+  <p>By <%= @book.author %></p>
+  <p>Category: <%= @book.category.name %></p>
+  <p>ISBN: <%= @book.isbn %></p>
+  <p>Published: <%= @book.published_on || "Not specified" %></p>
+  <p>Price: <%= number_to_currency(@book.price) %></p>
+  <p>In stock: <%= @book.stock %></p>
+  <div><%= simple_format(@book.description) %></div>
+</article>
+
+<%= link_to "Back to books", books_path %>

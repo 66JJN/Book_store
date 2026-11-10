@@ -1,0 +1,20 @@
+<% if book.errors.any? %>
+  <ul>
+    <% book.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+
+<%= form_with model: [:admin, book] do |form| %>
+  <p><%= form.label :title %><br><%= form.text_field :title, required: true %></p>
+  <p><%= form.label :author %><br><%= form.text_field :author, required: true %></p>
+  <p><%= form.label :isbn %><br><%= form.text_field :isbn, required: true %></p>
+  <p><%= form.label :category_id, "Category" %><br><%= form.collection_select :category_id, Category.order(:name), :id, :name, prompt: "Select a category", required: true %></p>
+  <p><%= form.label :price %><br><%= form.number_field :price, min: 0, step: 0.01, required: true %></p>
+  <p><%= form.label :stock %><br><%= form.number_field :stock, min: 0, step: 1, required: true %></p>
+  <p><%= form.label :published_on %><br><%= form.date_field :published_on %></p>
+  <p><%= form.label :cover_image_url, "Cover image URL" %><br><%= form.url_field :cover_image_url %></p>
+  <p><%= form.label :description %><br><%= form.text_area :description %></p>
+  <%= form.submit %>
+<% end %>

@@ -1,0 +1,4 @@
+<% content_for :title, "Edit #{@book.title}" %>
+<h1>Edit Book</h1>
+<%= render "form", book: @book %>
+<%= link_to "Back", admin_books_path %>
