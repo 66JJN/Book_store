@@ -17,15 +17,6 @@ admin_password = ENV.fetch("ADMIN_PASSWORD", "1234")
 reader_email = ENV.fetch("READER_EMAIL", "user@bks.test")
 reader_password = ENV.fetch("READER_PASSWORD", "1234")
 
-# เปลี่ยน category ของหนังสือข้อมูลตัวอย่างให้ตรงกับหมวดใหม่
-book_categories = {
-  "9780525559474" => "ตลก",
-  "9780132350884" => "การเงิน",
-  "9780553380163" => "จิตวิทยา",
-  "9780062316097" => "การ์ตูนอนิเมะ",
-  "9780735211292" => "จิตวิทยา"
-}
-
 admin = User.find_by(email_address: admin_email) || User.find_by(email_address: "admin@bookstore.test") || User.new
 admin.email_address = admin_email
 admin.update!(password: admin_password, password_confirmation: admin_password, role: :admin)

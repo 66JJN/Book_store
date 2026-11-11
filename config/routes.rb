@@ -7,8 +7,8 @@ Rails.application.routes.draw do
   namespace :admin do
     root "dashboard#index"
     resources :books, except: :show
-    resources :categories
-    resources :markets
+    resources :categories, except: :show
+    resources :markets, except: :show
     resources :users, only: %i[index new create edit update destroy]
   end
 
