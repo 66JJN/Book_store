@@ -13,8 +13,7 @@ bin/dev
 
 Open `http://localhost:3000`.
 
-Set the seed account environment variables provided separately before running `bin/rails db:seed`.
 
 ## Bruno
 
-Open the `bruno/book-store-api` folder in Bruno and select the `local` environment. Add the account variables provided separately, then run **Admin login success** before other protected API requests.
+Open the `bruno/book-store-api` folder in Bruno and select the `local` environment. Run **Admin login success** before other protected API requests.

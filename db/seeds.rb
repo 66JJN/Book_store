@@ -12,10 +12,10 @@ old_category_names = ["Fiction", "Non-fiction", "Technology", "Science", "Histor
 
 categories = category_names.index_with { |name| Category.find_or_create_by!(name:) }
 
-admin_email = ENV.fetch("ADMIN_EMAIL")
-admin_password = ENV.fetch("ADMIN_PASSWORD")
-reader_email = ENV.fetch("READER_EMAIL")
-reader_password = ENV.fetch("READER_PASSWORD")
+admin_email = ENV.fetch("ADMIN_EMAIL", "admin@bks.test")
+admin_password = ENV.fetch("ADMIN_PASSWORD", "1234")
+reader_email = ENV.fetch("READER_EMAIL", "user@bks.test")
+reader_password = ENV.fetch("READER_PASSWORD", "1234")
 
 # เปลี่ยน category ของหนังสือข้อมูลตัวอย่างให้ตรงกับหมวดใหม่
 book_categories = {

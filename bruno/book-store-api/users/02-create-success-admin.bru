@@ -15,7 +15,7 @@ script:pre-request {
   bru.setVar("runId", Date.now().toString());
 }
 body:json {
-  { "user": { "email_address": "thai.reader.{{runId}}@example.test", "password": "1234", "password_confirmation": "1234", "role": "user" } }
+  { "user": { "email_address": "thai.reader.{{runId}}@example.test", "password": "{{newUserPassword}}", "password_confirmation": "{{newUserPassword}}", "role": "user" } }
 }
 script:post-response {
   bru.setVar("createdUserId", res.body.user.id);
