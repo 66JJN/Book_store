@@ -12,7 +12,7 @@ headers {
   content-type: application/json
 }
 body:json {
-  { "book": { "title": "Bruno Book Updated", "price": 100, "market_ids": [] } }
+  { "book": { "title": "หุ้นมือใหม่ ฉบับแก้ไข", "description": "อัปเดตจาก Bruno API", "price": 320.00, "market_ids": [] } }
 }
 tests {
   test("updates book", function() { expect(res.getStatus()).to.equal(200); });

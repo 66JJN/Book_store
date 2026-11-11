@@ -7,35 +7,57 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-categories = %w[Fiction Non-fiction Technology Science History].map do |name|
-  Category.find_or_create_by!(name:)
-end
+category_names = ["การเงิน", "ตลก", "จิตวิทยา", "การ์ตูนอนิเมะ"]
+old_category_names = ["Fiction", "Non-fiction", "Technology", "Science", "History"]
 
-admin = User.find_or_initialize_by(email_address: "admin@bookstore.test")
-admin.update!(password: "password123", password_confirmation: "password123", role: :admin)
+categories = category_names.index_with { |name| Category.find_or_create_by!(name:) }
 
-customer = User.find_or_initialize_by(email_address: "reader@bookstore.test")
-customer.update!(password: "password123", password_confirmation: "password123", role: :user)
+# เปลี่ยน category ของหนังสือข้อมูลตัวอย่างให้ตรงกับหมวดใหม่
+book_categories = {
+  "9780525559474" => "ตลก",
+  "9780132350884" => "การเงิน",
+  "9780553380163" => "จิตวิทยา",
+  "9780062316097" => "การ์ตูนอนิเมะ",
+  "9780735211292" => "จิตวิทยา"
+}
+
+admin = User.find_by(email_address: "admin@bks.test") || User.find_by(email_address: "admin@bookstore.test") || User.new
+admin.email_address = "admin@bks.test"
+admin.update!(password: "1234", password_confirmation: "1234", role: :admin)
+
+customer = User.find_by(email_address: "user@bks.test") || User.find_by(email_address: "reader@bookstore.test") || User.new
+customer.email_address = "user@bks.test"
+customer.update!(password: "1234", password_confirmation: "1234", role: :user)
 
 books = [
-  ["The Midnight Library", "Matt Haig", "9780525559474", "Fiction", 14.99, 12, "A novel about the choices that shape a life."],
-  ["Clean Code", "Robert C. Martin", "9780132350884", "Technology", 39.99, 8, "A practical guide to writing maintainable software."],
-  ["A Brief History of Time", "Stephen Hawking", "9780553380163", "Science", 18.50, 15, "An accessible exploration of modern cosmology."],
-  ["Sapiens", "Yuval Noah Harari", "9780062316097", "History", 22.00, 10, "A short history of humankind."],
-  ["Atomic Habits", "James Clear", "9780735211292", "Non-fiction", 16.99, 20, "Small changes that lead to remarkable results."]
+  ["หุ้น CK", "CK Cheong", "9780525559474", "การเงิน", 350.00, 12, "หนังสือพื้นฐานสำหรับคนที่อยากเริ่มศึกษาการลงทุนในหุ้น อ่านง่าย เหมาะกับมือใหม่."],
+  ["ลงทุนหุ้นกับพี่ดิว", "พี่ดิว", "9780132350884", "การเงิน", 299.00, 8, "แนวคิดการลงทุนและการวิเคราะห์หุ้นฉบับเข้าใจง่าย พร้อมตัวอย่างสำหรับนักลงทุนมือใหม่."],
+  ["ขายหัวเราะ", "บก.ขายหัวเราะ", "9780553380163", "ตลก", 75.00, 15, "รวมการ์ตูนและมุกสนุก ๆ สำหรับอ่านคลายเครียด."],
+  ["ONE PIECE", "Eiichiro Oda", "9780062316097", "การ์ตูนอนิเมะ", 95.00, 10, "การผจญภัยของลูฟี่และกลุ่มหมวกฟางในการตามหาสมบัติวันพีซ."],
+  ["จิตวิทยาสำหรับชีวิตประจำวัน", "ทีม Book Store", "9780735211292", "จิตวิทยา", 220.00, 20, "เรียนรู้ความคิด อารมณ์ และพฤติกรรมของคน เพื่อนำไปใช้ในชีวิตประจำวัน."]
 ]
 
 books.each do |title, author, isbn, category_name, price, stock, description|
   Book.find_or_initialize_by(isbn:).update!(
-    title:, author:, category: categories.find { |category| category.name == category_name },
+    title:, author:, category: categories.fetch(category_name),
     price:, stock:, description:
   )
 end
 
-markets = ["Central Book Market", "Weekend Book Fair", "Online Book Market"].map do |name|
+# ลบเฉพาะหมวดตัวอย่างเดิมที่ไม่มีหนังสือเหลืออยู่
+Category.where(name: old_category_names).find_each do |category|
+  category.destroy if category.books.empty?
+end
+
+market_names = ["ตลาดนัดหนังสือ", "งานสัปดาห์หนังสือ", "ร้านหนังสือออนไลน์"]
+markets = market_names.map do |name|
   Market.find_or_create_by!(name:)
 end
 
 Book.find_by!(isbn: "9780132350884").markets = [markets[0], markets[2]]
 Book.find_by!(isbn: "9780062316097").markets = [markets[0], markets[1]]
 Book.find_by!(isbn: "9780735211292").markets = [markets[1], markets[2]]
+
+Market.where(name: ["Central Book Market", "Weekend Book Fair", "Online Book Market"]).find_each do |market|
+  market.destroy if market.books.empty?
+end

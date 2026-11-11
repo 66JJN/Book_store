@@ -8,6 +8,10 @@ get {
   body: none
   auth: none
 }
+script:post-response {
+  const market = res.body.markets.find((item) => item.name === "ตลาดนัดหนังสือ");
+  if (market) bru.setVar("marketId", market.id);
+}
 tests {
   test("returns markets", function() { expect(res.getStatus()).to.equal(200); });
 }

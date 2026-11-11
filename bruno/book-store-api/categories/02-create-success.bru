@@ -15,7 +15,7 @@ script:pre-request {
   bru.setVar("runId", Date.now().toString());
 }
 body:json {
-  { "category": { "name": "Bruno Category {{runId}}" } }
+  { "category": { "name": "นิยายไทยทดสอบ {{runId}}" } }
 }
 script:post-response {
   bru.setVar("createdCategoryId", res.body.category.id);

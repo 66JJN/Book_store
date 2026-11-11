@@ -8,6 +8,10 @@ get {
   body: none
   auth: none
 }
+script:post-response {
+  const category = res.body.categories.find((item) => item.name === "การเงิน");
+  if (category) bru.setVar("categoryId", category.id);
+}
 tests {
   test("returns categories", function() { expect(res.getStatus()).to.equal(200); });
 }

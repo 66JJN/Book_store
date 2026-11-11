@@ -1,0 +1,14 @@
+<% if user.errors.any? %>
+  <ul class="mb-4 list-inside list-disc rounded bg-red-100 p-3 text-red-700">
+    <% user.errors.full_messages.each do |message| %><li><%= message %></li><% end %>
+  </ul>
+<% end %>
+
+<%= form_with model: [:admin, user], class: "rounded border border-red-200 bg-white p-5 shadow-sm" do |form| %>
+  <p><%= form.label :email_address, "Email", class: "font-bold" %><br><%= form.email_field :email_address, required: true, class: "mt-1 w-full rounded border border-gray-300 px-3 py-2" %></p>
+  <p><%= form.label :password, class: "font-bold" %><br><%= form.password_field :password, required: password_required, class: "mt-1 w-full rounded border border-gray-300 px-3 py-2" %></p>
+  <p><%= form.label :password_confirmation, class: "font-bold" %><br><%= form.password_field :password_confirmation, required: password_required, class: "mt-1 w-full rounded border border-gray-300 px-3 py-2" %></p>
+  <% unless password_required %><p class="text-sm text-gray-500">Leave password blank to keep the current password.</p><% end %>
+  <p><%= form.label :role, class: "font-bold" %><br><%= form.select :role, User.roles.keys, {}, class: "mt-1 rounded border border-gray-300 px-3 py-2" %></p>
+  <%= form.submit submit_text, class: "cursor-pointer rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700" %>
+<% end %>

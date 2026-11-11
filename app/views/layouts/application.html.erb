@@ -33,7 +33,6 @@
         <%= button_to "Log out", session_path, method: :delete, class: "rounded border border-white px-3 py-1 text-sm hover:bg-red-800" %>
       <% else %>
         <%= link_to "Sign in", new_session_path, class: "ml-auto rounded bg-white px-3 py-1 text-red-700 hover:bg-red-100" %>
-        <%= link_to "Create account", new_registration_path, class: "rounded border border-white px-3 py-1 hover:bg-red-800" %>
       <% end %>
     </nav>
 

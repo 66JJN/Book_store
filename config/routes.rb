@@ -2,7 +2,6 @@ Rails.application.routes.draw do
   root "books#index"
 
   resource :session, only: %i[new create destroy]
-  resource :registration, only: %i[new create]
   resources :books, only: %i[index show]
 
   namespace :admin do
@@ -10,7 +9,7 @@ Rails.application.routes.draw do
     resources :books, except: :show
     resources :categories
     resources :markets
-    resources :users, only: %i[index new create]
+    resources :users, only: %i[index new create edit update destroy]
   end
 
   namespace :api, defaults: { format: :json } do
