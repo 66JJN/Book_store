@@ -8,6 +8,7 @@ Rails Book Store project with authentication, book search/filter, admin CRUD, JS
 bundle install
 yarn install
 bin/rails db:prepare
+bin/rails db:seed
 bin/dev
 ```
 

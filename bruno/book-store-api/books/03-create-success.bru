@@ -15,10 +15,10 @@ script:pre-request {
   bru.setVar("runId", Date.now().toString());
 }
 body:json {
-  { "book": { "title": "หุ้นมือใหม่ {{runId}}", "author": "พี่ดิว", "isbn": "978000{{runId}}", "description": "หนังสือทดสอบ API หมวดการเงิน", "price": 299.00, "stock": 5, "category_id": {{categoryId}}, "market_ids": [{{marketId}}] } }
+  { "book": { "title": "หุ้นมือใหม่ {{runId}}", "author": "พี่ดิว", "isbn": "978000{{runId}}", "description": "หนังสือทดสอบ API หมวดการเงิน", "price": 299.00, "stock": 5, "category_name": "การเงิน", "market_names": ["ตลาดนัดหนังสือ"] } }
 }
 script:post-response {
-  bru.setVar("createdBookId", res.body.book.id);
+  if (res.getStatus() === 201) bru.setVar("createdBookId", res.body.book.id);
 }
 tests {
   test("creates book", function() { expect(res.getStatus()).to.equal(201); });

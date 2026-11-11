@@ -18,7 +18,7 @@ body:json {
   { "category": { "name": "นิยายไทยทดสอบ {{runId}}" } }
 }
 script:post-response {
-  bru.setVar("createdCategoryId", res.body.category.id);
+  if (res.getStatus() === 201) bru.setVar("createdCategoryId", res.body.category.id);
 }
 tests {
   test("creates category", function() { expect(res.getStatus()).to.equal(201); });

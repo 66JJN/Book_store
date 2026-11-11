@@ -38,6 +38,19 @@ class Api::BooksController < Api::BaseController
   def set_book = @book = Book.includes(:category, :markets).find(params[:id])
 
   def book_params
-    params.require(:book).permit(:title, :author, :isbn, :description, :price, :stock, :published_on, :cover_image_url, :category_id, market_ids: [])
+    permitted = params.require(:book).permit(
+      :title, :author, :isbn, :description, :price, :stock, :published_on,
+      :cover_image_url, :category_id, :category_name, market_ids: [], market_names: []
+    )
+
+    if (category_name = permitted.delete(:category_name)).present?
+      permitted[:category_id] = Category.find_by(name: category_name)&.id
+    end
+
+    if (market_names = permitted.delete(:market_names)).present?
+      permitted[:market_ids] = Market.where(name: market_names).pluck(:id)
+    end
+
+    permitted
   end
 end

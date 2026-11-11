@@ -37,4 +37,19 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal [second_market], @book.reload.markets.to_a
   end
+
+  test "admin can create a book with Thai category and market names" do
+    market = Market.create!(name: "ตลาดนัดหนังสือ")
+    @category.update!(name: "การเงิน")
+
+    post api_session_path, params: { email_address: @admin.email_address, password: "password123" }, as: :json
+    post api_books_path, params: {
+      book: { title: "หุ้นมือใหม่", author: "พี่ดิว", isbn: "9780000000003", price: 299, stock: 5,
+              category_name: "การเงิน", market_names: ["ตลาดนัดหนังสือ"] }
+    }, as: :json
+
+    assert_response :created
+    assert_equal "การเงิน", response.parsed_body.dig("book", "category", "name")
+    assert_equal [market.name], response.parsed_body.dig("book", "markets").pluck("name")
+  end
 end

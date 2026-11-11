@@ -18,7 +18,7 @@ body:json {
   { "market": { "name": "ตลาดหนังสือทดสอบ {{runId}}" } }
 }
 script:post-response {
-  bru.setVar("createdMarketId", res.body.market.id);
+  if (res.getStatus() === 201) bru.setVar("createdMarketId", res.body.market.id);
 }
 tests {
   test("creates market", function() { expect(res.getStatus()).to.equal(201); });

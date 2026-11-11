@@ -18,7 +18,7 @@ body:json {
   { "user": { "email_address": "thai.reader.{{runId}}@example.test", "password": "{{newUserPassword}}", "password_confirmation": "{{newUserPassword}}", "role": "user" } }
 }
 script:post-response {
-  bru.setVar("createdUserId", res.body.user.id);
+  if (res.getStatus() === 201) bru.setVar("createdUserId", res.body.user.id);
 }
 tests {
   test("creates user", function() { expect(res.getStatus()).to.equal(201); });
