@@ -1,0 +1,19 @@
+meta {
+  name: Update category success
+  type: http
+  seq: 3
+}
+patch {
+  url: {{baseUrl}}/api/categories/{{createdCategoryId}}
+  body: json
+  auth: none
+}
+headers {
+  content-type: application/json
+}
+body:json {
+  { "category": { "name": "Bruno Category Updated" } }
+}
+tests {
+  test("updates category", function() { expect(res.getStatus()).to.equal(200); });
+}

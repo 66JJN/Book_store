@@ -1,0 +1,13 @@
+meta {
+  name: List books failed unauthenticated
+  type: http
+  seq: 7
+}
+get {
+  url: {{baseUrl}}/api/books
+  body: none
+  auth: none
+}
+tests {
+  test("returns 401 after logout", function() { expect(res.getStatus()).to.equal(401); });
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Create book success
+  type: http
+  seq: 3
+}
+post {
+  url: {{baseUrl}}/api/books
+  body: json
+  auth: none
+}
+headers {
+  content-type: application/json
+}
+script:pre-request {
+  bru.setVar("runId", Date.now().toString());
+}
+body:json {
+  { "book": { "title": "Bruno Book {{runId}}", "author": "API Tester", "isbn": "978000{{runId}}", "price": 99.99, "stock": 5, "category_id": {{categoryId}}, "market_ids": [{{marketId}}] } }
+}
+script:post-response {
+  bru.setVar("createdBookId", res.body.book.id);
+}
+tests {
+  test("creates book", function() { expect(res.getStatus()).to.equal(201); });
+}

@@ -1,0 +1,13 @@
+meta {
+  name: Delete market success
+  type: http
+  seq: 4
+}
+delete {
+  url: {{baseUrl}}/api/markets/{{createdMarketId}}
+  body: none
+  auth: none
+}
+tests {
+  test("deletes market", function() { expect(res.getStatus()).to.equal(204); });
+}

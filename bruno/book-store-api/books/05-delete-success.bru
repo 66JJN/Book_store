@@ -1,0 +1,13 @@
+meta {
+  name: Delete book success
+  type: http
+  seq: 5
+}
+delete {
+  url: {{baseUrl}}/api/books/{{createdBookId}}
+  body: none
+  auth: none
+}
+tests {
+  test("deletes book", function() { expect(res.getStatus()).to.equal(204); });
+}

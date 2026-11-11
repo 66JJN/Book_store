@@ -1,0 +1,13 @@
+meta {
+  name: List categories success
+  type: http
+  seq: 1
+}
+get {
+  url: {{baseUrl}}/api/categories
+  body: none
+  auth: none
+}
+tests {
+  test("returns categories", function() { expect(res.getStatus()).to.equal(200); });
+}

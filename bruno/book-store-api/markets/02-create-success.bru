@@ -1,0 +1,25 @@
+meta {
+  name: Create market success
+  type: http
+  seq: 2
+}
+post {
+  url: {{baseUrl}}/api/markets
+  body: json
+  auth: none
+}
+headers {
+  content-type: application/json
+}
+script:pre-request {
+  bru.setVar("runId", Date.now().toString());
+}
+body:json {
+  { "market": { "name": "Bruno Market {{runId}}" } }
+}
+script:post-response {
+  bru.setVar("createdMarketId", res.body.market.id);
+}
+tests {
+  test("creates market", function() { expect(res.getStatus()).to.equal(201); });
+}

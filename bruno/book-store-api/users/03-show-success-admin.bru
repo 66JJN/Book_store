@@ -1,0 +1,13 @@
+meta {
+  name: Show user success admin
+  type: http
+  seq: 3
+}
+get {
+  url: {{baseUrl}}/api/users/{{createdUserId}}
+  body: none
+  auth: none
+}
+tests {
+  test("returns user", function() { expect(res.getStatus()).to.equal(200); });
+}

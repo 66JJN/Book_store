@@ -1,0 +1,13 @@
+meta {
+  name: List books success
+  type: http
+  seq: 1
+}
+get {
+  url: {{baseUrl}}/api/books?category_id={{categoryId}}
+  body: none
+  auth: none
+}
+tests {
+  test("returns books", function() { expect(res.getStatus()).to.equal(200); });
+}

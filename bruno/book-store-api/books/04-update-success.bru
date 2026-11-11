@@ -1,0 +1,19 @@
+meta {
+  name: Update book success
+  type: http
+  seq: 4
+}
+patch {
+  url: {{baseUrl}}/api/books/{{createdBookId}}
+  body: json
+  auth: none
+}
+headers {
+  content-type: application/json
+}
+body:json {
+  { "book": { "title": "Bruno Book Updated", "price": 100, "market_ids": [] } }
+}
+tests {
+  test("updates book", function() { expect(res.getStatus()).to.equal(200); });
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Create book failed validation
+  type: http
+  seq: 6
+}
+post {
+  url: {{baseUrl}}/api/books
+  body: json
+  auth: none
+}
+headers {
+  content-type: application/json
+}
+body:json {
+  { "book": { "title": "", "author": "", "isbn": "", "price": -1, "stock": -1 } }
+}
+tests {
+  test("returns 422", function() { expect(res.getStatus()).to.equal(422); });
+}

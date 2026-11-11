@@ -1,18 +1,18 @@
 <% content_for :title, "Manage books" %>
 
-<h1>Manage Books</h1>
-<p><%= link_to "Add book", new_admin_book_path %></p>
+<h1 class="mb-4 text-3xl font-bold text-red-700">Manage Books</h1>
+<p class="mb-4"><%= link_to "Add book", new_admin_book_path, class: "rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700" %></p>
 
-<table>
-  <thead><tr><th>Title</th><th>Author</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
+<div class="overflow-x-auto rounded border border-red-200 bg-white shadow-sm"><table class="w-full text-left">
+  <thead class="bg-red-700 text-white"><tr><th class="p-3">Title</th><th class="p-3">Author</th><th class="p-3">Category</th><th class="p-3">Price</th><th class="p-3">Stock</th><th class="p-3">Actions</th></tr></thead>
   <tbody>
     <% @books.each do |book| %>
-      <tr>
-        <td><%= link_to book.title, book_path(book) %></td>
-        <td><%= book.author %></td><td><%= book.category.name %></td>
-        <td><%= number_to_currency(book.price) %></td><td><%= book.stock %></td>
-        <td><%= link_to "Edit", edit_admin_book_path(book) %> <%= button_to "Delete", admin_book_path(book), method: :delete, data: { turbo_confirm: "Delete #{book.title}?" } %></td>
+      <tr class="border-t border-gray-200">
+        <td class="p-3 font-bold text-red-700"><%= link_to book.title, book_path(book) %></td>
+        <td class="p-3"><%= book.author %></td><td class="p-3"><%= book.category.name %></td>
+        <td class="p-3"><%= number_to_currency(book.price) %></td><td class="p-3"><%= book.stock %></td>
+        <td class="flex gap-2 p-3"><%= link_to "Edit", edit_admin_book_path(book), class: "rounded border border-red-600 px-2 py-1 text-red-700" %> <%= button_to "Delete", admin_book_path(book), method: :delete, data: { turbo_confirm: "Delete #{book.title}?" }, class: "rounded bg-red-600 px-2 py-1 text-white" %></td>
       </tr>
     <% end %>
   </tbody>
-</table>
+</table></div>

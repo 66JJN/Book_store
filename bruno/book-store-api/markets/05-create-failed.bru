@@ -1,0 +1,19 @@
+meta {
+  name: Create market failed validation
+  type: http
+  seq: 5
+}
+post {
+  url: {{baseUrl}}/api/markets
+  body: json
+  auth: none
+}
+headers {
+  content-type: application/json
+}
+body:json {
+  { "market": { "name": "" } }
+}
+tests {
+  test("returns 422", function() { expect(res.getStatus()).to.equal(422); });
+}

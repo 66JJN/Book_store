@@ -1,0 +1,7 @@
+<h1 class="mb-4 text-3xl font-bold text-red-700">Manage Users</h1>
+<p class="mb-4"><%= link_to "Add user", new_admin_user_path, class: "rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700" %></p>
+<div class="overflow-x-auto rounded border border-red-200 bg-white shadow-sm"><table class="w-full text-left">
+  <thead class="bg-red-700 text-white"><tr><th class="p-3">Email</th><th class="p-3">Role</th></tr></thead>
+  <tbody><% @users.each do |user| %><tr class="border-t border-gray-200"><td class="p-3"><%= user.email_address %></td><td class="p-3"><%= user.role %></td></tr><% end %></tbody>
+</table></div>
+<p class="mt-4"><%= link_to "Back to admin", admin_root_path, class: "text-red-700 underline" %></p>

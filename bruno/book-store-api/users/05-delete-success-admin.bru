@@ -1,0 +1,13 @@
+meta {
+  name: Delete user success admin
+  type: http
+  seq: 5
+}
+delete {
+  url: {{baseUrl}}/api/users/{{createdUserId}}
+  body: none
+  auth: none
+}
+tests {
+  test("deletes user", function() { expect(res.getStatus()).to.equal(204); });
+}

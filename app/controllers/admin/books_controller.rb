@@ -2,7 +2,7 @@ class Admin::BooksController < Admin::BaseController
   before_action :set_book, only: %i[edit update destroy]
 
   def index
-    @books = Book.includes(:category).order(:title)
+    @books = Book.includes(:category, :markets).order(:title)
   end
 
   def new
@@ -40,6 +40,6 @@ class Admin::BooksController < Admin::BaseController
   end
 
   def book_params
-    params.require(:book).permit(:title, :author, :isbn, :description, :price, :stock, :published_on, :cover_image_url, :category_id)
+    params.require(:book).permit(:title, :author, :isbn, :description, :price, :stock, :published_on, :cover_image_url, :category_id, market_ids: [])
   end
 end

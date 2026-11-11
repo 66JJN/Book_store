@@ -1,0 +1,13 @@
+meta {
+  name: List markets success
+  type: http
+  seq: 1
+}
+get {
+  url: {{baseUrl}}/api/markets
+  body: none
+  auth: none
+}
+tests {
+  test("returns markets", function() { expect(res.getStatus()).to.equal(200); });
+}

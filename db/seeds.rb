@@ -31,3 +31,11 @@ books.each do |title, author, isbn, category_name, price, stock, description|
     price:, stock:, description:
   )
 end
+
+markets = ["Central Book Market", "Weekend Book Fair", "Online Book Market"].map do |name|
+  Market.find_or_create_by!(name:)
+end
+
+Book.find_by!(isbn: "9780132350884").markets = [markets[0], markets[2]]
+Book.find_by!(isbn: "9780062316097").markets = [markets[0], markets[1]]
+Book.find_by!(isbn: "9780735211292").markets = [markets[1], markets[2]]

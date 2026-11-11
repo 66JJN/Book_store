@@ -1,0 +1,13 @@
+meta {
+  name: Logout success
+  type: http
+  seq: 3
+}
+delete {
+  url: {{baseUrl}}/api/session
+  body: none
+  auth: none
+}
+tests {
+  test("returns 204", function() { expect(res.getStatus()).to.equal(204); });
+}

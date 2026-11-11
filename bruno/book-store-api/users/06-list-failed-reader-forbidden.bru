@@ -1,0 +1,13 @@
+meta {
+  name: List users failed reader forbidden
+  type: http
+  seq: 8
+}
+get {
+  url: {{baseUrl}}/api/users
+  body: none
+  auth: none
+}
+tests {
+  test("returns 403", function() { expect(res.getStatus()).to.equal(403); });
+}

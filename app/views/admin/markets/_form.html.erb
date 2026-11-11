@@ -1,0 +1,7 @@
+<% if market.errors.any? %>
+  <ul class="mb-4 list-inside list-disc rounded bg-red-100 p-3 text-red-700"><% market.errors.full_messages.each do |message| %><li><%= message %></li><% end %></ul>
+<% end %>
+<%= form_with model: [:admin, market], class: "rounded border border-red-200 bg-white p-5 shadow-sm" do |form| %>
+  <p><%= form.label :name, class: "font-bold" %><br><%= form.text_field :name, required: true, class: "mt-1 w-full rounded border border-gray-300 px-3 py-2" %></p>
+  <%= form.submit class: "cursor-pointer rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700" %>
+<% end %>

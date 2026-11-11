@@ -1,20 +1,27 @@
 <% if book.errors.any? %>
-  <ul>
+  <ul class="mb-4 list-inside list-disc rounded bg-red-100 p-3 text-red-700">
     <% book.errors.full_messages.each do |message| %>
       <li><%= message %></li>
     <% end %>
   </ul>
 <% end %>
 
-<%= form_with model: [:admin, book] do |form| %>
-  <p><%= form.label :title %><br><%= form.text_field :title, required: true %></p>
-  <p><%= form.label :author %><br><%= form.text_field :author, required: true %></p>
-  <p><%= form.label :isbn %><br><%= form.text_field :isbn, required: true %></p>
-  <p><%= form.label :category_id, "Category" %><br><%= form.collection_select :category_id, Category.order(:name), :id, :name, prompt: "Select a category", required: true %></p>
-  <p><%= form.label :price %><br><%= form.number_field :price, min: 0, step: 0.01, required: true %></p>
-  <p><%= form.label :stock %><br><%= form.number_field :stock, min: 0, step: 1, required: true %></p>
-  <p><%= form.label :published_on %><br><%= form.date_field :published_on %></p>
-  <p><%= form.label :cover_image_url, "Cover image URL" %><br><%= form.url_field :cover_image_url %></p>
-  <p><%= form.label :description %><br><%= form.text_area :description %></p>
-  <%= form.submit %>
+<%= form_with model: [:admin, book], class: "rounded border border-red-200 bg-white p-5 shadow-sm" do |form| %>
+  <p><%= form.label :title, class: "font-bold" %><br><%= form.text_field :title, required: true, class: "mt-1 w-full rounded border border-gray-300 px-3 py-2" %></p>
+  <p><%= form.label :author, class: "font-bold" %><br><%= form.text_field :author, required: true, class: "mt-1 w-full rounded border border-gray-300 px-3 py-2" %></p>
+  <p><%= form.label :isbn, class: "font-bold" %><br><%= form.text_field :isbn, required: true, class: "mt-1 w-full rounded border border-gray-300 px-3 py-2" %></p>
+  <p><%= form.label :category_id, "Category", class: "font-bold" %><br><%= form.collection_select :category_id, Category.order(:name), :id, :name, { prompt: "Select a category" }, { required: true, class: "mt-1 rounded border border-gray-300 px-3 py-2" } %></p>
+  <fieldset class="mb-4 rounded border border-red-200 p-3">
+    <legend class="px-1 font-bold text-red-700">Available markets</legend>
+    <%= form.collection_check_boxes :market_ids, Market.order(:name), :id, :name do |market| %>
+      <%= market.check_box %>
+      <%= market.label class: "mr-3" %>
+    <% end %>
+  </fieldset>
+  <p><%= form.label :price, class: "font-bold" %><br><%= form.number_field :price, min: 0, step: 0.01, required: true, class: "mt-1 rounded border border-gray-300 px-3 py-2" %></p>
+  <p><%= form.label :stock, class: "font-bold" %><br><%= form.number_field :stock, min: 0, step: 1, required: true, class: "mt-1 rounded border border-gray-300 px-3 py-2" %></p>
+  <p><%= form.label :published_on, class: "font-bold" %><br><%= form.date_field :published_on, class: "mt-1 rounded border border-gray-300 px-3 py-2" %></p>
+  <p><%= form.label :cover_image_url, "Cover image URL", class: "font-bold" %><br><%= form.url_field :cover_image_url, class: "mt-1 w-full rounded border border-gray-300 px-3 py-2" %></p>
+  <p><%= form.label :description, class: "font-bold" %><br><%= form.text_area :description, class: "mt-1 w-full rounded border border-gray-300 px-3 py-2" %></p>
+  <%= form.submit class: "cursor-pointer rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700" %>
 <% end %>

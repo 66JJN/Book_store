@@ -1,0 +1,19 @@
+meta {
+  name: Create user failed validation
+  type: http
+  seq: 6
+}
+post {
+  url: {{baseUrl}}/api/users
+  body: json
+  auth: none
+}
+headers {
+  content-type: application/json
+}
+body:json {
+  { "user": { "email_address": "", "password": "short", "password_confirmation": "different", "role": "user" } }
+}
+tests {
+  test("returns 422", function() { expect(res.getStatus()).to.equal(422); });
+}

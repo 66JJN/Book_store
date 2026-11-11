@@ -1,0 +1,19 @@
+meta {
+  name: Update user success admin
+  type: http
+  seq: 4
+}
+patch {
+  url: {{baseUrl}}/api/users/{{createdUserId}}
+  body: json
+  auth: none
+}
+headers {
+  content-type: application/json
+}
+body:json {
+  { "user": { "role": "admin" } }
+}
+tests {
+  test("updates user", function() { expect(res.getStatus()).to.equal(200); });
+}

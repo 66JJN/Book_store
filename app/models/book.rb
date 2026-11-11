@@ -1,5 +1,7 @@
 class Book < ApplicationRecord
   belongs_to :category
+  has_many :market_books, dependent: :destroy
+  has_many :markets, through: :market_books
 
   validates :title, :author, :isbn, presence: true
   validates :isbn, uniqueness: true
