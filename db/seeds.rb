@@ -12,6 +12,11 @@ old_category_names = ["Fiction", "Non-fiction", "Technology", "Science", "Histor
 
 categories = category_names.index_with { |name| Category.find_or_create_by!(name:) }
 
+admin_email = ENV.fetch("ADMIN_EMAIL")
+admin_password = ENV.fetch("ADMIN_PASSWORD")
+reader_email = ENV.fetch("READER_EMAIL")
+reader_password = ENV.fetch("READER_PASSWORD")
+
 # เปลี่ยน category ของหนังสือข้อมูลตัวอย่างให้ตรงกับหมวดใหม่
 book_categories = {
   "9780525559474" => "ตลก",
@@ -21,13 +26,13 @@ book_categories = {
   "9780735211292" => "จิตวิทยา"
 }
 
-admin = User.find_by(email_address: "admin@bks.test") || User.find_by(email_address: "admin@bookstore.test") || User.new
-admin.email_address = "admin@bks.test"
-admin.update!(password: "1234", password_confirmation: "1234", role: :admin)
+admin = User.find_by(email_address: admin_email) || User.find_by(email_address: "admin@bookstore.test") || User.new
+admin.email_address = admin_email
+admin.update!(password: admin_password, password_confirmation: admin_password, role: :admin)
 
-customer = User.find_by(email_address: "user@bks.test") || User.find_by(email_address: "reader@bookstore.test") || User.new
-customer.email_address = "user@bks.test"
-customer.update!(password: "1234", password_confirmation: "1234", role: :user)
+customer = User.find_by(email_address: reader_email) || User.find_by(email_address: "reader@bookstore.test") || User.new
+customer.email_address = reader_email
+customer.update!(password: reader_password, password_confirmation: reader_password, role: :user)
 
 books = [
   ["หุ้น CK", "CK Cheong", "9780525559474", "การเงิน", 350.00, 12, "หนังสือพื้นฐานสำหรับคนที่อยากเริ่มศึกษาการลงทุนในหุ้น อ่านง่าย เหมาะกับมือใหม่."],
