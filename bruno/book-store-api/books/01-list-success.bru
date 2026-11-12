@@ -3,11 +3,17 @@ meta {
   type: http
   seq: 1
 }
+
 get {
   url: {{baseUrl}}/api/books?category_id={{categoryId}}
   body: none
   auth: none
 }
+
+params:query {
+  category_id: {{categoryId}}
+}
+
 tests {
   test("returns books", function() { expect(res.getStatus()).to.equal(200); });
 }
