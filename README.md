@@ -43,7 +43,7 @@ Guests can browse books; the JSON API always needs a login. Emails sent in devel
    ```
    `ADMIN_PASSWORD` / `READER_PASSWORD` must match the project `.env`; `NEW_USER_PASSWORD` is any 6+ characters.
 2. Open the `bruno/book-store-api` folder in Bruno (reopen it after editing `.env`) and select the `local` environment.
-3. Start the app with `bin/dev`, then run **Admin login success** before other protected API requests.
+3. Start the app with `bin/dev`, then right-click the collection and choose **Run**: it logs in first and logs out last (folder `zz-logout`), so all 30 requests pass in one run.
 
 ## Tests
 

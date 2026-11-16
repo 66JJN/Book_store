@@ -12,6 +12,14 @@ ActiveAdmin.register User do
     actions
   end
 
+  # CSV export: list the safe columns explicitly so tokens never end up in a file
+  csv do
+    column :id
+    column :email
+    column(:roles) { |user| user.roles.map(&:name).sort.join(", ") }
+    column :created_at
+  end
+
   filter :email
   filter :roles, collection: -> { Role.order(:name) }
   filter :created_at

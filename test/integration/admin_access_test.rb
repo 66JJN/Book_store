@@ -52,6 +52,17 @@ class AdminAccessTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "users CSV export does not leak password tokens" do
+    @reader.send_reset_password_instructions
+    sign_in @admin
+
+    get admin_users_url(format: :csv)
+    assert_response :success
+    # ActiveAdmin starts CSV files with a UTF-8 BOM so Excel reads Thai correctly
+    assert_equal "Id,Email,Roles,Created at", response.body.lines.first.delete_prefix("\uFEFF").strip
+    assert_no_match(/reset.password|encrypted/i, response.body)
+  end
+
   test "admin filters work" do
     sign_in @admin
 
