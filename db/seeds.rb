@@ -7,20 +7,23 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+return unless Rails.env.development?
+
 category_names = ["การเงิน", "ตลก", "จิตวิทยา", "การ์ตูนอนิเมะ"]
 old_category_names = ["Fiction", "Non-fiction", "Technology", "Science", "History"]
 
 categories = category_names.index_with { |name| Category.find_or_create_by!(name:) }
 
-# Credentials come from .env (see .env.example). There is no fallback on purpose:
-# never hardcode passwords here. Devise needs at least 6 characters.
-admin = User.find_or_initialize_by(email: ENV.fetch("ADMIN_EMAIL"))
-admin.update!(password: ENV.fetch("ADMIN_PASSWORD"), password_confirmation: ENV.fetch("ADMIN_PASSWORD"))
+# Credentials come from .env (see .env.example), never hardcode them here
+admin = User.find_or_create_by!(email: ENV.fetch("ADMIN_EMAIL")) do |user|
+  user.password = ENV.fetch("ADMIN_PASSWORD")
+end
 admin.add_role(:admin)
 
-reader = User.find_or_initialize_by(email: ENV.fetch("READER_EMAIL"))
-reader.update!(password: ENV.fetch("READER_PASSWORD"), password_confirmation: ENV.fetch("READER_PASSWORD"))
-reader.add_role(:reader)
+# New users get the reader role automatically (User#assign_default_role)
+User.find_or_create_by!(email: ENV.fetch("READER_EMAIL")) do |user|
+  user.password = ENV.fetch("READER_PASSWORD")
+end
 
 books = [
   ["หุ้น CK", "CK Cheong", "9780525559474", "การเงิน", 350.00, 12, "หนังสือพื้นฐานสำหรับคนที่อยากเริ่มศึกษาการลงทุนในหุ้น อ่านง่าย เหมาะกับมือใหม่."],

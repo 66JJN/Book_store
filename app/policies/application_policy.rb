@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# Default policy for the public site and the JSON API: deny everything unless a subclass allows it
 class ApplicationPolicy
   attr_reader :user, :record
 
@@ -9,18 +8,38 @@ class ApplicationPolicy
     @record = record
   end
 
-  def index? = false
-  def show? = false
-  def create? = false
-  def new? = create?
-  def update? = false
-  def edit? = update?
-  def destroy? = false
+  def index?
+    false
+  end
+
+  def show?
+    false
+  end
+
+  def create?
+    false
+  end
+
+  def new?
+    create?
+  end
+
+  def update?
+    false
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+    false
+  end
 
   private
 
   def admin?
-    user&.admin? || false
+    user&.admin?
   end
 
   class Scope

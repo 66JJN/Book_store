@@ -3,11 +3,10 @@ class BooksController < ApplicationController
   # here if an action that needs a login is ever added.
 
   # Safety net: raise if an action forgets to call authorize / policy_scope
-  after_action :verify_authorized
+  after_action :verify_authorized, except: :index
   after_action :verify_policy_scoped, only: :index
 
   def index
-    authorize Book
     @categories = policy_scope(Category).order(:name)
     @selected_category_id = params[:category_id].presence
     @query = params[:q].to_s.strip
