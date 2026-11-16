@@ -1,0 +1,14 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Mass Assignment",
+      "fingerprint": "2555693441bd2314a908ad1bba2978db4d96efe680de52496285a57a10f68bf0",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/api/users_controller.rb",
+      "code": "params.require(:user).permit(:email_address, :password, :password_confirmation, :role)",
+      "note": "Only admins can reach Api::UsersController (UserPolicy allows admins only), and an admin cannot remove their own admin role. Managing roles is the point of this endpoint."
+    }
+  ],
+  "brakeman_version": "8.1.0"
+}

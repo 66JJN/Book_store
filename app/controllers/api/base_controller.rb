@@ -12,7 +12,7 @@ class Api::BaseController < ActionController::API
   end
 
   rescue_from ActionController::ParameterMissing do |error|
-    render json: { errors: [error.message] }, status: :unprocessable_entity
+    render json: { errors: [ error.message ] }, status: :unprocessable_entity
   end
 
   rescue_from Pundit::NotAuthorizedError do
