@@ -208,13 +208,6 @@ ActiveAdmin.setup do |config|
   #     end
   #   end
 
-  # First item in the admin side menu: a way back to the store (Books page)
-  config.namespace :admin do |admin|
-    admin.build_menu :default do |menu|
-      menu.add label: "← Back to store", url: -> { main_app.books_path }, priority: 0
-    end
-  end
-
   # == Download Links
   #
   # You can disable download links on resource listing pages,

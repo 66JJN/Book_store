@@ -42,12 +42,13 @@ class AdminAccessTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "every admin page has a link back to the store" do
+  test "every admin page has the store's Books button in the top bar" do
     sign_in @admin
 
     [ admin_root_url, admin_books_url, admin_users_url ].each do |url|
       get url
-      assert_select "a[href=?]", books_path, text: "← Back to store"
+      assert_select "[data-test-site-title] + a[href=?]", books_path, text: "Books"
+      assert_select "#main-menu a", text: /Back to store/, count: 0
     end
   end
 

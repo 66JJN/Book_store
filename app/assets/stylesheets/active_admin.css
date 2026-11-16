@@ -4,10 +4,23 @@
 
 /*
  * Book Store theme for /admin
- * - Light mode (the default): white + red, like the store
- * - Dark mode: keeps ActiveAdmin's dark backgrounds, only the text accents turn red
- * The accent colour itself (blue -> red) is set in tailwind-active_admin.config.mjs.
+ * - Both modes: the same red top bar as the store's navbar
+ * - Light mode (the default): white cards on a light red page, red text accents
+ * - Dark mode: the mirror of light mode (white -> black), text accents in a soft rose red
+ *   that is easier to read on black
+ * The accent colour of buttons / focus rings (blue -> red) is set in tailwind-active_admin.config.mjs.
  */
+
+/* ---------- Both modes ---------- */
+div:has(> .grow > [data-test-site-title]) {
+  @apply bg-red-700 border-red-800;
+}
+
+[data-test-site-title],
+.dark-mode-toggle,
+#user-menu-button {
+  @apply text-white;
+}
 
 /* ---------- Light mode ---------- */
 html:not(.dark) {
@@ -15,18 +28,6 @@ html:not(.dark) {
     @apply bg-red-50;
   }
 
-  /* Top bar: same red bar as the store's navbar */
-  div:has(> .grow > [data-test-site-title]) {
-    @apply bg-red-700 border-red-800;
-  }
-
-  [data-test-site-title],
-  .dark-mode-toggle,
-  #user-menu-button {
-    @apply text-white;
-  }
-
-  /* Side menu */
   #main-menu {
     @apply bg-white xl:border-red-200;
   }
@@ -39,7 +40,6 @@ html:not(.dark) {
     @apply bg-red-100 text-red-800;
   }
 
-  /* Page title bar */
   [data-test-page-header] {
     @apply bg-white border-red-200;
   }
@@ -48,7 +48,6 @@ html:not(.dark) {
     @apply text-red-700;
   }
 
-  /* Tables and panels: white cards with red borders and headings */
   .data-table :where(thead > tr > th),
   .panel-title {
     @apply bg-red-50 text-red-800;
@@ -61,23 +60,48 @@ html:not(.dark) {
   }
 }
 
-/* ---------- Dark mode: only the text turns red ---------- */
+/* ---------- Dark mode: light mode with white and black swapped ---------- */
 html.dark {
-  [data-test-site-title],
-  [data-test-page-header] h2,
-  .panel-title {
-    @apply text-red-400;
+  body {
+    @apply bg-gray-950;
   }
 
-  #main-menu a.selected {
-    @apply text-red-400;
+  #main-menu {
+    @apply bg-gray-900 xl:border-red-900/50;
   }
 
   #main-menu a {
-    @apply hover:text-red-300;
+    @apply hover:text-rose-300;
   }
 
-  .data-table :where(thead > tr > th) {
-    @apply text-red-300;
+  #main-menu a.selected {
+    @apply bg-red-950/60 text-rose-300;
+  }
+
+  [data-test-page-header] {
+    @apply bg-gray-900 border-red-900/50;
+  }
+
+  [data-test-page-header] h2 {
+    @apply text-rose-300;
+  }
+
+  .data-table :where(thead > tr > th),
+  .panel-title {
+    @apply bg-red-950/40 text-rose-300;
+  }
+
+  .panel,
+  .attributes-table,
+  .paginated-collection {
+    @apply bg-gray-900 border-red-900/50;
+  }
+}
+
+/* Links (View / Edit / Delete, table links) in dark mode. Kept in the base layer so the
+   menu items, which set their own text colour, are not affected. */
+@layer base {
+  html.dark a {
+    @apply text-rose-300;
   }
 }
