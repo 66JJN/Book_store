@@ -18,21 +18,22 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%# Only the app stylesheet (active_admin.css is loaded by ActiveAdmin itself) %>
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
   <body class="min-h-screen bg-red-50 text-gray-800">
     <nav class="flex flex-wrap items-center gap-3 bg-red-700 px-5 py-4 text-white shadow">
       <%= link_to "Book Store", root_path, class: "mr-3 text-xl font-bold" %>
-      <% if authenticated? %>
-        <%= link_to "Books", books_path, class: "rounded bg-red-600 px-3 py-1 hover:bg-red-800" %>
-        <%= link_to "Admin", admin_root_path, class: "rounded bg-red-600 px-3 py-1 hover:bg-red-800" if admin? %>
-        <span class="ml-auto text-sm"><%= current_user.email_address %></span>
-        <%= button_to "Log out", session_path, method: :delete, class: "rounded border border-white px-3 py-1 text-sm hover:bg-red-800" %>
+      <%= link_to "Books", books_path, class: "rounded bg-red-600 px-3 py-1 hover:bg-red-800" %>
+      <% if user_signed_in? %>
+        <%= link_to "Admin", admin_root_path, class: "rounded bg-red-600 px-3 py-1 hover:bg-red-800" if current_user.admin? %>
+        <%= link_to current_user.email, edit_user_registration_path, class: "ml-auto text-sm hover:underline" %>
+        <%= button_to "Log out", destroy_user_session_path, method: :delete, class: "rounded border border-white px-3 py-1 text-sm hover:bg-red-800" %>
       <% else %>
-        <%= link_to "Sign in", new_session_path, class: "ml-auto rounded bg-white px-3 py-1 text-red-700 hover:bg-red-100" %>
+        <%= link_to "Sign in", new_user_session_path, class: "ml-auto rounded bg-white px-3 py-1 text-red-700 hover:bg-red-100" %>
+        <%= link_to "Sign up", new_user_registration_path, class: "rounded border border-white px-3 py-1 hover:bg-red-800" %>
       <% end %>
     </nav>
 

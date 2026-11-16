@@ -12,18 +12,15 @@ old_category_names = ["Fiction", "Non-fiction", "Technology", "Science", "Histor
 
 categories = category_names.index_with { |name| Category.find_or_create_by!(name:) }
 
-admin_email = ENV.fetch("ADMIN_EMAIL", "admin@bks.test")
-admin_password = ENV.fetch("ADMIN_PASSWORD", "1234")
-reader_email = ENV.fetch("READER_EMAIL", "user@bks.test")
-reader_password = ENV.fetch("READER_PASSWORD", "1234")
+# Credentials come from .env (see .env.example). There is no fallback on purpose:
+# never hardcode passwords here. Devise needs at least 6 characters.
+admin = User.find_or_initialize_by(email: ENV.fetch("ADMIN_EMAIL"))
+admin.update!(password: ENV.fetch("ADMIN_PASSWORD"), password_confirmation: ENV.fetch("ADMIN_PASSWORD"))
+admin.add_role(:admin)
 
-admin = User.find_by(email_address: admin_email) || User.find_by(email_address: "admin@bookstore.test") || User.new
-admin.email_address = admin_email
-admin.update!(password: admin_password, password_confirmation: admin_password, role: :admin)
-
-customer = User.find_by(email_address: reader_email) || User.find_by(email_address: "reader@bookstore.test") || User.new
-customer.email_address = reader_email
-customer.update!(password: reader_password, password_confirmation: reader_password, role: :user)
+reader = User.find_or_initialize_by(email: ENV.fetch("READER_EMAIL"))
+reader.update!(password: ENV.fetch("READER_PASSWORD"), password_confirmation: ENV.fetch("READER_PASSWORD"))
+reader.add_role(:reader)
 
 books = [
   ["หุ้น CK", "CK Cheong", "9780525559474", "การเงิน", 350.00, 12, "หนังสือพื้นฐานสำหรับคนที่อยากเริ่มศึกษาการลงทุนในหุ้น อ่านง่าย เหมาะกับมือใหม่."],

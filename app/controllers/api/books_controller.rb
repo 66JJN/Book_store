@@ -1,9 +1,9 @@
 class Api::BooksController < Api::BaseController
-  before_action :require_api_admin, only: %i[create update destroy]
   before_action :set_book, only: %i[show update destroy]
 
   def index
-    books = Book.includes(:category, :markets).in_category(params[:category_id]).search(params[:q]).order(:title)
+    authorize Book
+    books = policy_scope(Book).includes(:category, :markets).in_category(params[:category_id]).search(params[:q]).order(:title)
     render json: { books: books.map { |book| book_json(book) } }
   end
 
@@ -12,7 +12,7 @@ class Api::BooksController < Api::BaseController
   end
 
   def create
-    book = Book.new(book_params)
+    book = authorize Book.new(book_params)
     if book.save
       render json: { book: book_json(book.reload) }, status: :created
     else
@@ -35,7 +35,7 @@ class Api::BooksController < Api::BaseController
 
   private
 
-  def set_book = @book = Book.includes(:category, :markets).find(params[:id])
+  def set_book = @book = authorize(Book.includes(:category, :markets).find(params[:id]))
 
   def book_params
     permitted = params.require(:book).permit(

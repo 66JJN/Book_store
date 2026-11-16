@@ -1,9 +1,9 @@
 class Api::MarketsController < Api::BaseController
-  before_action :require_api_admin, only: %i[create update destroy]
   before_action :set_market, only: %i[show update destroy]
 
   def index
-    render json: { markets: Market.order(:name).map { |market| market_json(market) } }
+    authorize Market
+    render json: { markets: policy_scope(Market).order(:name).map { |market| market_json(market) } }
   end
 
   def show
@@ -11,7 +11,7 @@ class Api::MarketsController < Api::BaseController
   end
 
   def create
-    market = Market.new(market_params)
+    market = authorize Market.new(market_params)
     return render_errors(market) unless market.save
 
     render json: { market: market_json(market) }, status: :created
@@ -31,6 +31,6 @@ class Api::MarketsController < Api::BaseController
 
   private
 
-  def set_market = @market = Market.find(params[:id])
+  def set_market = @market = authorize(Market.find(params[:id]))
   def market_params = params.require(:market).permit(:name)
 end

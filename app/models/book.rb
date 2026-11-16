@@ -15,4 +15,13 @@ class Book < ApplicationRecord
       where("title ILIKE :term OR author ILIKE :term OR isbn ILIKE :term", term:)
     end
   end
+
+  # Columns / associations ActiveAdmin filters (Ransack) are allowed to search
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[title author isbn price stock published_on category_id created_at]
+  end
+
+  def self.ransackable_associations(_auth_object = nil)
+    %w[category markets market_books]
+  end
 end

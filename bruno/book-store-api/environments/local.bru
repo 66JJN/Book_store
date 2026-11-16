@@ -2,8 +2,9 @@ vars {
   baseUrl: http://localhost:3000
   adminEmail: admin@bks.test
   readerEmail: user@bks.test
-  password: 1234
-  newUserPassword: 1234
+  adminPassword: {{process.env.ADMIN_PASSWORD}}
+  readerPassword: {{process.env.READER_PASSWORD}}
+  newUserPassword: {{process.env.NEW_USER_PASSWORD}}
   categoryId: 1
   bookId: 1
   marketId: 1

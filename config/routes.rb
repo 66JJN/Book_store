@@ -1,16 +1,13 @@
 Rails.application.routes.draw do
+  # devise_for must come before ActiveAdmin so /admin can use the Devise login
+  devise_for :users, controllers: { registrations: "users/registrations" }
+  ActiveAdmin.routes(self)
+
+  # Emails sent in development (e.g. password reset) can be read here
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+
   root "books#index"
-
-  resource :session, only: %i[new create destroy]
   resources :books, only: %i[index show]
-
-  namespace :admin do
-    root "dashboard#index"
-    resources :books, except: :show
-    resources :categories, except: :show
-    resources :markets, except: :show
-    resources :users, only: %i[index new create edit update destroy]
-  end
 
   namespace :api, defaults: { format: :json } do
     resource :session, only: %i[create destroy]
@@ -27,5 +24,4 @@ Rails.application.routes.draw do
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
-
 end

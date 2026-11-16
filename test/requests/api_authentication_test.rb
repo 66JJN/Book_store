@@ -53,3 +53,80 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
     assert_equal [market.name], response.parsed_body.dig("book", "markets").pluck("name")
   end
 end
+
+class ApiAccessTest < ActionDispatch::IntegrationTest
+  setup do
+    @admin = User.create!(email_address: "admin@example.test", password: "password123", role: :admin)
+    @reader = User.create!(email_address: "reader@example.test", password: "password123", role: :user)
+  end
+
+  def login(user)
+    post api_session_path, params: { email_address: user.email_address, password: "password123" }, as: :json
+  end
+
+  test "login returns the user in the old JSON shape" do
+    login(@admin)
+
+    assert_response :success
+    assert_equal({ "id" => @admin.id, "email_address" => "admin@example.test", "role" => "admin" },
+                 response.parsed_body["user"].except("created_at"))
+  end
+
+  test "wrong password is rejected" do
+    post api_session_path, params: { email_address: @admin.email_address, password: "wrong-password" }, as: :json
+
+    assert_response :unauthorized
+    assert_equal "Invalid email or password", response.parsed_body["error"]
+  end
+
+  test "logout ends the session" do
+    login(@reader)
+    delete api_session_path
+    assert_response :no_content
+
+    get api_books_path
+    assert_response :unauthorized
+  end
+
+  test "reader can list books but not users" do
+    login(@reader)
+
+    get api_books_path
+    assert_response :success
+
+    get api_users_path
+    assert_response :forbidden
+    assert_equal "Admin access is required", response.parsed_body["error"]
+  end
+
+  test "admin creates a user, promotes them, and never sees the password hash" do
+    login(@admin)
+
+    post api_users_path, params: { user: { email_address: "new@example.test", password: "password123", password_confirmation: "password123", role: "user" } }, as: :json
+    assert_response :created
+    user_id = response.parsed_body.dig("user", "id")
+
+    patch api_user_path(user_id), params: { user: { role: "admin" } }, as: :json
+    assert_response :success
+    assert_equal "admin", response.parsed_body.dig("user", "role")
+    assert User.find(user_id).admin?
+
+    get api_users_path
+    assert_nil response.parsed_body["users"].first["encrypted_password"]
+  end
+
+  test "admin cannot demote themselves through the API" do
+    login(@admin)
+
+    patch api_user_path(@admin), params: { user: { role: "user" } }, as: :json
+    assert_response :unprocessable_entity
+    assert @admin.reload.admin?
+  end
+
+  test "admin cannot delete their own account through the API" do
+    login(@admin)
+
+    delete api_user_path(@admin)
+    assert_response :forbidden
+  end
+end

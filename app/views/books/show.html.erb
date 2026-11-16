@@ -14,4 +14,10 @@
   <div class="mt-4 border-t pt-4"><%= simple_format(@book.description) %></div>
 </article>
 
-<%= link_to "Back to books", books_path, class: "mt-5 inline-block rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700" %>
+<div class="mt-5 flex flex-wrap gap-3">
+  <%= link_to "Back to books", books_path, class: "inline-block rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700" %>
+  <%# Showing the button is only UX: the real check is Pundit in /admin %>
+  <% if policy(@book).edit? %>
+    <%= link_to "Edit in admin", edit_admin_book_path(@book), class: "inline-block rounded border border-red-600 px-4 py-2 font-bold text-red-700 hover:bg-red-100" %>
+  <% end %>
+</div>

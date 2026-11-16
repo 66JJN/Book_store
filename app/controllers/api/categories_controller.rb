@@ -1,9 +1,9 @@
 class Api::CategoriesController < Api::BaseController
-  before_action :require_api_admin, only: %i[create update destroy]
   before_action :set_category, only: %i[show update destroy]
 
   def index
-    render json: { categories: Category.order(:name).map { |category| category_json(category) } }
+    authorize Category
+    render json: { categories: policy_scope(Category).order(:name).map { |category| category_json(category) } }
   end
 
   def show
@@ -11,7 +11,7 @@ class Api::CategoriesController < Api::BaseController
   end
 
   def create
-    category = Category.new(category_params)
+    category = authorize Category.new(category_params)
     return render_errors(category) unless category.save
 
     render json: { category: category_json(category) }, status: :created
@@ -31,6 +31,6 @@ class Api::CategoriesController < Api::BaseController
 
   private
 
-  def set_category = @category = Category.find(params[:id])
+  def set_category = @category = authorize(Category.find(params[:id]))
   def category_params = params.require(:category).permit(:name)
 end

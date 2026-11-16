@@ -1,19 +1,20 @@
 class Api::SessionsController < Api::BaseController
   skip_before_action :require_api_authentication, only: :create
+  # Logging in / out is not about a record, so there is nothing to authorize
+  skip_after_action :verify_authorized
 
   def create
-    user = User.authenticate_by(params.permit(:email_address, :password))
-    return render json: { error: "Invalid email or password" }, status: :unauthorized unless user
+    user = User.find_for_authentication(email: params[:email_address])
+    unless user&.valid_password?(params[:password].to_s)
+      return render json: { error: "Invalid email or password" }, status: :unauthorized
+    end
 
-    session = user.sessions.create!(user_agent: request.user_agent, ip_address: request.remote_ip)
-    cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax }
+    sign_in(user)
     render json: { user: user_json(user) }, status: :ok
   end
 
   def destroy
-    Current.session&.destroy
-    Current.session = nil
-    cookies.delete(:session_id)
+    sign_out(current_user)
     head :no_content
   end
 end

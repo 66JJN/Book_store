@@ -4,4 +4,15 @@ require "rails/test_help"
 
 class ActiveSupport::TestCase
   parallelize(workers: 1)
+
+  # Test-only password. Never reuse it anywhere real.
+  TEST_PASSWORD = "password123"
+
+  def create_user(email, role: "user")
+    User.create!(email_address: email, password: TEST_PASSWORD, role: role)
+  end
+end
+
+class ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers # gives sign_in / sign_out
 end

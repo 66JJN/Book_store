@@ -1,7 +1,11 @@
 class Api::BaseController < ActionController::API
   include ActionController::Cookies
+  include Pundit::Authorization
 
   before_action :require_api_authentication
+
+  # Safety net: raise if an action forgets to call authorize
+  after_action :verify_authorized
 
   rescue_from ActiveRecord::RecordNotFound do
     render json: { error: "Not found" }, status: :not_found
@@ -11,26 +15,17 @@ class Api::BaseController < ActionController::API
     render json: { errors: [error.message] }, status: :unprocessable_entity
   end
 
+  rescue_from Pundit::NotAuthorizedError do
+    render json: { error: "Admin access is required" }, status: :forbidden
+  end
+
   private
 
-  def current_api_user
-    Current.session&.user
-  end
-
-  def resume_api_session
-    Current.session ||= Session.find_by(id: cookies.signed[:session_id]) if cookies.signed[:session_id]
-  end
-
+  # Devise keeps the login in the session cookie, so the browser and Bruno share the same login
   def require_api_authentication
-    return if resume_api_session
+    return if user_signed_in?
 
     render json: { error: "Authentication required" }, status: :unauthorized
-  end
-
-  def require_api_admin
-    return if current_api_user&.admin?
-
-    render json: { error: "Admin access is required" }, status: :forbidden
   end
 
   def book_json(book)
@@ -48,7 +43,7 @@ class Api::BaseController < ActionController::API
   end
 
   def user_json(user)
-    user.as_json(only: %i[id email_address role created_at])
+    { id: user.id, email_address: user.email, role: user.role, created_at: user.created_at }
   end
 
   def render_errors(record)

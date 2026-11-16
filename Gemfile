@@ -19,8 +19,16 @@ gem "cssbundling-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
-# Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-gem "bcrypt", "~> 3.1.7"
+# Authentication (login / sign up / password reset) [https://github.com/heartcombo/devise]
+gem "devise", "~> 5.0"
+# User roles (admin / reader) [https://github.com/RolifyCommunity/rolify]
+gem "rolify", "~> 6.0"
+# Authorization policies (who can do what) [https://github.com/varvet/pundit]
+gem "pundit", "~> 2.5"
+# Admin dashboard at /admin (v4 is still beta, so pin the exact version) [https://github.com/activeadmin/activeadmin]
+gem "activeadmin", "4.0.0.beta23"
+# ActiveAdmin v4 loads its own JS via importmap (the app itself still uses esbuild)
+gem "importmap-rails"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -43,6 +51,8 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 
 group :development, :test do
+  # Load ADMIN_EMAIL / ADMIN_PASSWORD etc. from .env (never hardcode credentials)
+  gem "dotenv-rails"
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
 
@@ -59,4 +69,7 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Read emails sent in development (password reset) at /letter_opener [https://github.com/fgrehm/letter_opener_web]
+  gem "letter_opener_web", "~> 3.0"
 end
