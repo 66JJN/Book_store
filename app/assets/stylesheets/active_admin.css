@@ -1,3 +1,83 @@
 @import "tailwindcss";
 
 @config "../../../tailwind-active_admin.config.mjs";
+
+/*
+ * Book Store theme for /admin
+ * - Light mode (the default): white + red, like the store
+ * - Dark mode: keeps ActiveAdmin's dark backgrounds, only the text accents turn red
+ * The accent colour itself (blue -> red) is set in tailwind-active_admin.config.mjs.
+ */
+
+/* ---------- Light mode ---------- */
+html:not(.dark) {
+  body {
+    @apply bg-red-50;
+  }
+
+  /* Top bar: same red bar as the store's navbar */
+  div:has(> .grow > [data-test-site-title]) {
+    @apply bg-red-700 border-red-800;
+  }
+
+  [data-test-site-title],
+  .dark-mode-toggle,
+  #user-menu-button {
+    @apply text-white;
+  }
+
+  /* Side menu */
+  #main-menu {
+    @apply bg-white xl:border-red-200;
+  }
+
+  #main-menu a {
+    @apply hover:text-red-700;
+  }
+
+  #main-menu a.selected {
+    @apply bg-red-100 text-red-800;
+  }
+
+  /* Page title bar */
+  [data-test-page-header] {
+    @apply bg-white border-red-200;
+  }
+
+  [data-test-page-header] h2 {
+    @apply text-red-700;
+  }
+
+  /* Tables and panels: white cards with red borders and headings */
+  .data-table :where(thead > tr > th),
+  .panel-title {
+    @apply bg-red-50 text-red-800;
+  }
+
+  .panel,
+  .attributes-table,
+  .paginated-collection {
+    @apply bg-white border-red-200;
+  }
+}
+
+/* ---------- Dark mode: only the text turns red ---------- */
+html.dark {
+  [data-test-site-title],
+  [data-test-page-header] h2,
+  .panel-title {
+    @apply text-red-400;
+  }
+
+  #main-menu a.selected {
+    @apply text-red-400;
+  }
+
+  #main-menu a {
+    @apply hover:text-red-300;
+  }
+
+  .data-table :where(thead > tr > th) {
+    @apply text-red-300;
+  }
+}

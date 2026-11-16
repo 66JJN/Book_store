@@ -1,5 +1,6 @@
 import { execSync } from 'child_process';
 import activeAdminPlugin from '@activeadmin/activeadmin/plugin';
+import colors from 'tailwindcss/colors';
 
 // Always use the last line of output since Bundler's DEBUG env will print additional lines.
 const activeAdminPath = execSync('bundle show activeadmin', { encoding: 'utf-8' }).trim().split(/\r?\n/).pop();
@@ -16,6 +17,16 @@ export default {
     './app/javascript/**/*.js'
   ],
   darkMode: "selector",
+  theme: {
+    extend: {
+      colors: {
+        // Book Store theme: ActiveAdmin's accent colour (blue / indigo) becomes the store's red,
+        // so links, primary buttons, focus rings and checkboxes match the shop
+        blue: colors.red,
+        indigo: colors.red
+      }
+    }
+  },
   plugins: [
     activeAdminPlugin
   ]
