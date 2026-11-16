@@ -2,6 +2,11 @@
 
 Rails Book Store project with authentication, book search/filter, admin CRUD, JSON API, and Bruno requests.
 
+## Requirements
+
+- Ruby 4.0.9 (see `.ruby-version`), Node.js + Yarn
+- PostgreSQL running locally (databases `book_store_development` / `book_store_test` are created by `db:prepare`)
+
 ## Run
 
 ```sh
@@ -32,4 +37,16 @@ Guests can browse books; the JSON API always needs a login. Emails sent in devel
 
 ## Bruno
 
-Open the `bruno/book-store-api` folder in Bruno and select the `local` environment. `password` (the seeded admin/reader password) and `newUserPassword` are secret variables: set them in Bruno's environment settings, they are not stored in the repo. Run **Admin login success** before other protected API requests.
+1. Create the collection's own env file (git-ignored) and fill it in:
+   ```sh
+   cp bruno/book-store-api/.env.example bruno/book-store-api/.env
+   ```
+   `ADMIN_PASSWORD` / `READER_PASSWORD` must match the project `.env`; `NEW_USER_PASSWORD` is any 6+ characters.
+2. Open the `bruno/book-store-api` folder in Bruno (reopen it after editing `.env`) and select the `local` environment.
+3. Start the app with `bin/dev`, then run **Admin login success** before other protected API requests.
+
+## Tests
+
+```sh
+bin/rails test
+```
