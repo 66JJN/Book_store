@@ -73,3 +73,7 @@ group :development do
   # Read emails sent in development (password reset) at /letter_opener [https://github.com/fgrehm/letter_opener_web]
   gem "letter_opener_web", "~> 3.0"
 end
+
+group :test do
+  gem "simplecov", require: false
+end

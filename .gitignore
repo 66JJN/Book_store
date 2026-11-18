@@ -42,3 +42,6 @@
 
 # Bruno collection secrets
 /bruno/book-store-api/.env
+
+# SimpleCov report
+/coverage/

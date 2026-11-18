@@ -1,3 +1,9 @@
+require "simplecov"
+SimpleCov.start "rails" do
+  add_group "Policies", "app/policies"
+  add_group "Admin", "app/admin"
+end
+
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
