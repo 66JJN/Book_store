@@ -120,4 +120,20 @@ class AdminAccessTest < ActionDispatch::IntegrationTest
       delete admin_user_url(@admin)
     end
   end
+
+  test "admin sets a new password for a user" do
+    sign_in @admin
+
+    patch admin_user_url(@reader), params: { user: { email: @reader.email, password: "brand-new-pass", password_confirmation: "brand-new-pass" } }
+
+    assert @reader.reload.valid_password?("brand-new-pass")
+  end
+
+  test "the admin book page shows the cover image" do
+    @book.update!(cover_image_url: "https://example.test/cover.jpg")
+    sign_in @admin
+
+    get admin_book_url(@book)
+    assert_select "img[src=?]", "https://example.test/cover.jpg"
+  end
 end

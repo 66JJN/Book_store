@@ -129,4 +129,11 @@ class ApiAccessTest < ActionDispatch::IntegrationTest
     delete api_user_path(@admin)
     assert_response :forbidden
   end
+
+  test "an unknown email is rejected like a wrong password" do
+    post api_session_path, params: { email_address: "nobody@example.test", password: "password123" }, as: :json
+
+    assert_response :unauthorized
+    assert_equal "Invalid email or password", response.parsed_body["error"]
+  end
 end

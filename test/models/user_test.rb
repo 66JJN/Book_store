@@ -39,4 +39,11 @@ class UserTest < ActiveSupport::TestCase
 
     assert user.reload.valid_password?("legacy-pass")
   end
+
+  test "a user created with a role keeps it and does not also become a reader" do
+    user = User.create!(email_address: "staff@example.test", password: TEST_PASSWORD, roles: [ Role.find_or_create_by!(name: "admin") ])
+
+    assert user.admin?
+    assert_not user.has_role?(:reader)
+  end
 end

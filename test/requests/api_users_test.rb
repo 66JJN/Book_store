@@ -6,12 +6,8 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
     @reader = create_user("reader@example.test")
   end
 
-  def login(user)
-    post api_session_path, params: { email_address: user.email_address, password: TEST_PASSWORD }, as: :json
-  end
-
   test "admin shows one user" do
-    login(@admin)
+    api_login(@admin)
     get api_user_path(@reader)
 
     assert_response :success
@@ -20,7 +16,7 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   end
 
   test "create with invalid data returns the errors" do
-    login(@admin)
+    api_login(@admin)
 
     assert_no_difference -> { User.count } do
       post api_users_path, params: { user: { email_address: @reader.email, password: "short", role: "boss" } }, as: :json
@@ -32,7 +28,7 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   end
 
   test "update without a password keeps the old one" do
-    login(@admin)
+    api_login(@admin)
     patch api_user_path(@reader), params: { user: { email_address: "renamed@example.test", password: "" } }, as: :json
 
     assert_response :success
@@ -41,7 +37,7 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   end
 
   test "update with invalid data returns the errors" do
-    login(@admin)
+    api_login(@admin)
     patch api_user_path(@reader), params: { user: { email_address: "not-an-email" } }, as: :json
 
     assert_response :unprocessable_entity
@@ -49,11 +45,34 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   end
 
   test "admin deletes another user" do
-    login(@admin)
+    api_login(@admin)
 
     assert_difference -> { User.count }, -1 do
       delete api_user_path(@reader)
     end
     assert_response :no_content
+  end
+
+  test "reader cannot see, change or delete other users" do
+    api_login(@reader)
+
+    get api_user_path(@admin)
+    assert_response :forbidden
+
+    patch api_user_path(@admin), params: { user: { role: "user" } }, as: :json
+    assert_response :forbidden
+    assert @admin.reload.admin?
+
+    assert_no_difference -> { User.count } do
+      delete api_user_path(@admin)
+    end
+    assert_response :forbidden
+  end
+
+  test "a missing user returns 404 JSON" do
+    api_login(@admin)
+    get api_user_path(id: 0)
+
+    assert_response :not_found
   end
 end

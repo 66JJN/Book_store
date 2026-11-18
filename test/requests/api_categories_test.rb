@@ -7,12 +7,8 @@ class ApiCategoriesTest < ActionDispatch::IntegrationTest
     @tech = Category.create!(name: "Technology")
   end
 
-  def login(user)
-    post api_session_path, params: { email_address: user.email_address, password: TEST_PASSWORD }, as: :json
-  end
-
   test "reader lists and shows categories" do
-    login(@reader)
+    api_login(@reader)
 
     get api_categories_path
     assert_response :success
@@ -24,7 +20,7 @@ class ApiCategoriesTest < ActionDispatch::IntegrationTest
   end
 
   test "admin creates, renames and deletes a category" do
-    login(@admin)
+    api_login(@admin)
 
     post api_categories_path, params: { category: { name: "Cooking" } }, as: :json
     assert_response :created
@@ -40,7 +36,7 @@ class ApiCategoriesTest < ActionDispatch::IntegrationTest
   end
 
   test "invalid category data returns the errors" do
-    login(@admin)
+    api_login(@admin)
 
     post api_categories_path, params: { category: { name: "" } }, as: :json
     assert_response :unprocessable_entity
@@ -52,7 +48,7 @@ class ApiCategoriesTest < ActionDispatch::IntegrationTest
 
   test "a category that still has books cannot be deleted" do
     Book.create!(title: "Rails", author: "Team", isbn: "9780000000001", price: 1, stock: 1, category: @tech)
-    login(@admin)
+    api_login(@admin)
 
     assert_no_difference -> { Category.count } do
       delete api_category_path(@tech)
@@ -61,7 +57,7 @@ class ApiCategoriesTest < ActionDispatch::IntegrationTest
   end
 
   test "reader cannot create a category" do
-    login(@reader)
+    api_login(@reader)
     post api_categories_path, params: { category: { name: "Nope" } }, as: :json
 
     assert_response :forbidden

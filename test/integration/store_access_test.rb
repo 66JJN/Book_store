@@ -92,4 +92,49 @@ class StoreAccessTest < ActionDispatch::IntegrationTest
     get new_user_password_url
     assert_response :success
   end
+
+  test "signing in with a wrong password shows an error" do
+    post user_session_url, params: { user: { email: @reader.email, password: "wrong-password" } }
+
+    assert_response :unprocessable_content
+    assert_select "[role=alert]", text: "Invalid email or password."
+  end
+
+  test "sign up with mismatched passwords shows an error" do
+    assert_no_difference -> { User.count } do
+      post user_registration_url, params: { user: { email: "fresh@example.test", password: TEST_PASSWORD, password_confirmation: "something-else" } }
+    end
+    assert_response :unprocessable_content
+    assert_match "Password confirmation doesn&#39;t match Password", response.body
+  end
+
+  test "a reader changes their email in My account" do
+    sign_in @reader
+
+    put user_registration_url, params: { user: { email: "renamed@example.test", current_password: TEST_PASSWORD } }
+
+    assert_redirected_to root_url
+    assert_equal "renamed@example.test", @reader.reload.email
+  end
+
+  test "My account needs the current password to save" do
+    sign_in @reader
+
+    put user_registration_url, params: { user: { email: "renamed@example.test", current_password: "wrong" } }
+
+    assert_response :unprocessable_content
+    assert_equal "reader@example.test", @reader.reload.email
+  end
+
+  test "the link in the reset email lets the reader set a new password" do
+    post user_password_url, params: { user: { email: @reader.email } }
+    token = ActionMailer::Base.deliveries.last.body.to_s[/reset_password_token=([^"&]+)/, 1]
+
+    get edit_user_password_url(reset_password_token: token)
+    assert_response :success
+
+    put user_password_url, params: { user: { reset_password_token: token, password: "brand-new-pass", password_confirmation: "brand-new-pass" } }
+    assert_redirected_to root_url
+    assert @reader.reload.valid_password?("brand-new-pass")
+  end
 end

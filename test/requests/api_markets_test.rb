@@ -8,12 +8,8 @@ class ApiMarketsTest < ActionDispatch::IntegrationTest
     @airport = Market.create!(name: "Airport")
   end
 
-  def login(user)
-    post api_session_path, params: { email_address: user.email_address, password: TEST_PASSWORD }, as: :json
-  end
-
   test "index lists markets ordered by name" do
-    login(@reader)
+    api_login(@reader)
     get api_markets_path
 
     assert_response :success
@@ -21,7 +17,7 @@ class ApiMarketsTest < ActionDispatch::IntegrationTest
   end
 
   test "show returns one market" do
-    login(@reader)
+    api_login(@reader)
     get api_market_path(@central)
 
     assert_response :success
@@ -29,7 +25,7 @@ class ApiMarketsTest < ActionDispatch::IntegrationTest
   end
 
   test "create with a duplicate name returns the errors" do
-    login(@admin)
+    api_login(@admin)
 
     assert_no_difference -> { Market.count } do
       post api_markets_path, params: { market: { name: "Central" } }, as: :json
@@ -39,7 +35,7 @@ class ApiMarketsTest < ActionDispatch::IntegrationTest
   end
 
   test "admin renames a market" do
-    login(@admin)
+    api_login(@admin)
     patch api_market_path(@central), params: { market: { name: "Downtown" } }, as: :json
 
     assert_response :success
@@ -47,7 +43,7 @@ class ApiMarketsTest < ActionDispatch::IntegrationTest
   end
 
   test "update with a blank name returns the errors" do
-    login(@admin)
+    api_login(@admin)
     patch api_market_path(@central), params: { market: { name: "" } }, as: :json
 
     assert_response :unprocessable_entity
@@ -55,7 +51,7 @@ class ApiMarketsTest < ActionDispatch::IntegrationTest
   end
 
   test "reader cannot rename a market" do
-    login(@reader)
+    api_login(@reader)
     patch api_market_path(@central), params: { market: { name: "Hacked" } }, as: :json
 
     assert_response :forbidden
@@ -63,7 +59,7 @@ class ApiMarketsTest < ActionDispatch::IntegrationTest
   end
 
   test "admin deletes an empty market" do
-    login(@admin)
+    api_login(@admin)
 
     assert_difference -> { Market.count }, -1 do
       delete api_market_path(@airport)
@@ -74,7 +70,7 @@ class ApiMarketsTest < ActionDispatch::IntegrationTest
   test "a market that still has books cannot be deleted" do
     category = Category.create!(name: "Tech")
     @central.books << Book.create!(title: "Rails", author: "Team", isbn: "9780000000001", price: 1, stock: 1, category:)
-    login(@admin)
+    api_login(@admin)
 
     assert_no_difference -> { Market.count } do
       delete api_market_path(@central)
